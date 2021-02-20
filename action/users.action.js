@@ -10,7 +10,25 @@ const getUser = async (email,phone) => {
     return user[0] && user[0].length && user[0][0] || null;
 }
 
+const getUsersData = async ({ limit }) => {
+    const users = await knex.raw(`SELECT * FROM users LIMIT ${limit}`);
+    return users[0] && users[0].length && users[0] || null;
+}
+
+const updateUser = async ({ id, name }) => {
+    const user = await knex.raw(`UPDATE users SET name='${name}' WHERE id=${id} LIMIT 1`);
+    return user[0] && user[0].length && user[0] || null;
+}
+
+const delUser = async ({ id }) => {
+    const user = await knex.raw(`DELETE FROM users WHERE id=${id} LIMIT 1`);
+    return user[0] || null;
+}
+
 module.exports = {
     createUser,
-    getUser
+    getUser,
+    getUsersData,
+    updateUser,
+    delUser
 }

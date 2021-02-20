@@ -3,7 +3,9 @@ const redis = require('../modules/redis');
 const generateToken = require('../token/tokenGenerat');
 const md5 = require('md5');
 const { validData } = require('../validation/validUserData');
-const { createUser, getUser } = require('../action/users.action');
+const {
+    createUser, getUser, getUsersData, updateUser, delUser
+} = require('../action/users.action');
 
 
 
@@ -31,7 +33,7 @@ exports.login = async (req, res) => {
        const token = generateToken(user.password)
        const isSet = redis.set(token, JSON.stringify(user))
        if (!isSet) {
-           res.status(200).json({
+           res.status(200).set('Authorization', token).json({
                message: "Adding radish to the database failed !",
                error: true,
                data: {}
@@ -68,6 +70,7 @@ exports.register = async (req, res) => {
 
         if (user && user.id) {
             res.status(200).json({
+                error: true,
                 message: 'The same user has already existed'
             });
             return;
@@ -98,4 +101,66 @@ exports.logout = async (req , res ) => {
        message: "you are out of the page !"
    })
 
+}
+
+exports.getUsers = async (req , res ) => {
+    try {
+        const params = {
+            limit : req.query.limit,
+        }
+
+        const users = await getUsersData(params);
+
+        res.status(200).json({
+            error: false,
+            message: "Success !",
+            data: users,
+        });
+    } catch (e) {
+        console.log('getUsers', e);
+        res.status(400).json({
+            message: e.massage || e.sqlMessage,
+            error: true
+        })
+    }
+}
+
+exports.updateUser = async (req , res ) => {
+    try {
+        const params = {
+            id: req.body.id,
+            name : req.body.name,
+        }
+        const updatedUser = await updateUser(params);
+        res.status(200).json({
+            error: false,
+            message: "Success !",
+            data: updatedUser,
+        });
+    } catch (e) {
+        console.log('updateUser', e);
+        res.status(400).json({
+            message: e.massage || e.sqlMessage,
+            error: true
+        })
+    }
+}
+exports.deleteUser = async (req , res ) => {
+    try {
+        const params = {
+            id: req.body.id,
+        }
+        const user = await delUser(params);
+        res.status(200).json({
+            error: false,
+            message: user.affectedRows ? "Success !" : 'User not found',
+            data: user.affectedRows,
+        });
+    } catch (e) {
+        console.log('updateUser', e);
+        res.status(400).json({
+            message: e.massage || e.sqlMessage,
+            error: true
+        })
+    }
 }
