@@ -1,4 +1,5 @@
 const redis = require('../modules/redis');
+const {logger} = require('../modules/loggerWinston')
 const check = async (req , res , next) => {
     try{
         const authToken = req.headers.authorization
@@ -10,14 +11,17 @@ const check = async (req , res , next) => {
                 error: false,
                 data: user
             })
+
         }
         else {
+            logger.log('info','middleware - checkAuth  ');
             next()
         }
     } catch (e) {
-        res.status(400).json({
-            message: e.message
-        })
+        logger.log('error', 'middleware - checkAuth - check',e , {message: e.message})
+        // res.status(400).json({
+        //     message: e.message
+        // })
     }
 
 }

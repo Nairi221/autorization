@@ -1,5 +1,6 @@
 const chalk = require('chalk');
 const redis = require('../modules/redis');
+const { logger } = require('../modules/loggerWinston');
 const generateToken = require('../token/tokenGenerat');
 const md5 = require('md5');
 const { validData } = require('../validation/validUserData');
@@ -11,7 +12,19 @@ const {
 
 
 exports.login = async (req, res) => {
-   const user = await getUser(req.body.email, req.body.phone);
+    logger.log('info', 'Controller - Auth: login ', {
+        url: req.originalUrl,
+        data: {
+            body: req.body,
+        }
+    });
+    const user = await getUser(req.body.email, req.body.phone);
+     logger.log('info','gtav userin', user,{
+         url : req.originalUrl,
+         data : {
+             body : req.body
+         }
+     });
    try {
        if (!user) {
            res.status(200).json({
@@ -24,7 +37,7 @@ exports.login = async (req, res) => {
        const isMatch = md5(req.body.password).match(user.password);
        if (!isMatch) {
            res.status(200).json({
-               message: chalk.red("you entered the wrong password !"),
+               message: "you entered the wrong password !",
                error: true,
                data: {}
            })
@@ -48,9 +61,13 @@ exports.login = async (req, res) => {
        })
    }
    catch (e){
-       res.status(404).json({
-        message: e.message || e.sqlMessage,
-    })
+       logger.log('error','xntir ka  , controllers - auth - generatToken',e,{
+           message: e.message || e.sqlMessage,
+
+       })
+  //     res.status(404).json({
+    //    message: e.message || e.sqlMessage,
+    //})
    }
 }
 
@@ -87,9 +104,13 @@ exports.register = async (req, res) => {
             message: 'Success'
         })
     } catch (e) {
-        res.status(404).json({
-            message: e.message || e.sqlMessage,
+        logger.log('error','controllers - auth - creatUser',e ,{
+            url : req.originalUrl,
+            message: e.message || e.sqlMessage
         })
+        // res.status(404).json({
+        //     message: e.message || e.sqlMessage,
+        // })
     }
 }
 
@@ -117,11 +138,13 @@ exports.getUsers = async (req , res ) => {
             data: users,
         });
     } catch (e) {
-        console.log('getUsers', e);
-        res.status(400).json({
-            message: e.massage || e.sqlMessage,
-            error: true
+        logger.log('error','controllers - auth - getUserData',e ,{
+            url : req.originalUrl,
+                message: e.massage || e.sqlMessage,
+                error: true
         })
+
+
     }
 }
 
@@ -138,11 +161,15 @@ exports.updateUser = async (req , res ) => {
             data: updatedUser,
         });
     } catch (e) {
-        console.log('updateUser', e);
-        res.status(400).json({
+        logger.log('error','controllers - auth - ubdateUser ',e,{
+            url : req.originalUrl,
             message: e.massage || e.sqlMessage,
             error: true
-        })
+        } );
+        // res.status(400).json({
+        //     message: e.massage || e.sqlMessage,
+        //     error: true
+        // })
     }
 }
 exports.deleteUser = async (req , res ) => {
@@ -157,10 +184,14 @@ exports.deleteUser = async (req , res ) => {
             data: user.affectedRows,
         });
     } catch (e) {
-        console.log('updateUser', e);
-        res.status(400).json({
+        logger.log('error','controllers - auth - deleteUser',e ,{
+            url:req.originalUrl,
             message: e.massage || e.sqlMessage,
             error: true
-        })
+        });
+        // res.status(400).json({
+        //     message: e.massage || e.sqlMessage,
+        //     error: true
+        // })
     }
 }

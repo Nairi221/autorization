@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const secret = 'abcdefg';
+const {logger} = require('../modules/loggerWinston');
 
  const generateToken = (password) =>{
      const timesTamp = (new Date()).getTime()
@@ -8,7 +9,7 @@ const secret = 'abcdefg';
      const hash = crypto.createHmac('sha256', secret)
          .update(timesTamp+password )
          .digest('hex');
-     console.log(hash);
+     logger.log('info',{hash});
 
      return hash;
  }

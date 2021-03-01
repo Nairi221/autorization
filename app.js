@@ -23,7 +23,10 @@ app.use(require('cors')());
 app.use(bodyParser.urlencoded({extended: true}));// tuyla tais en kod anel vorosh tvyalner
 
 // es paragayum kstananq tvyal hascen //localhost:5000/api/auth/login
-app.use('/api/auth',authRoutes);//avelacnum enq bazzvi hascen  u erkrord argument authRooutes tvyalner@
+app.use('/api/auth',(req,res, next) => {
+    console.log('Mtav routes');
+    next();
+},authRoutes);//avelacnum enq bazzvi hascen  u erkrord argument authRooutes tvyalner@
 app.use('/api/analytics',analyticsRoutes);
 app.use('/api/category',categoryRoutes);
 app.use('/api/order',orderRoutes);

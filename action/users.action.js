@@ -7,6 +7,7 @@ const createUser = async (body) => {
 }
 const getUser = async (email,phone) => {
     const user = await knex.raw(`SELECT * FROM users WHERE email='${email}' OR phone='${phone}'`);
+    console.log('getUseri mej', user[0][0]);
     return user[0] && user[0].length && user[0][0] || null;
 }
 
