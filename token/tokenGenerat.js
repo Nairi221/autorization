@@ -9,7 +9,7 @@ const {logger} = require('../modules/loggerWinston');
      const hash = crypto.createHmac('sha256', secret)
          .update(timesTamp+password )
          .digest('hex');
-     logger.log('info',{hash});
+     logger.log('info','generat token',{hash});
 
      return hash;
  }

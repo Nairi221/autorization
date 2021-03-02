@@ -4,7 +4,7 @@ const {logger} = require('../modules/loggerWinston');
 
 
 client.on("error", function(error) {
-    logger.error(error);
+    logger.log('error', 'redis error',{error});
 });
 const get = async (key) => {
     return new Promise(resolve => {
@@ -21,7 +21,7 @@ const get = async (key) => {
 };
 const set = async (key , value) => {
     try {
-        const push = await client.set(key,value)// es push xi chi ashxatum
+        const push = await client.set(key,value)
         return push;
     }
     catch (e){

@@ -61,13 +61,13 @@ exports.login = async (req, res) => {
        })
    }
    catch (e){
-       logger.log('error','xntir ka  , controllers - auth - generatToken',e,{
+       logger.log('error',' controllers - auth - generatToken',{
            message: e.message || e.sqlMessage,
-
+           })
+       data : res.status(404).json({
+           message: e.message || e.sqlMessage,
        })
-  //     res.status(404).json({
-    //    message: e.message || e.sqlMessage,
-    //})
+
    }
 }
 
@@ -108,9 +108,9 @@ exports.register = async (req, res) => {
             url : req.originalUrl,
             message: e.message || e.sqlMessage
         })
-        // res.status(404).json({
-        //     message: e.message || e.sqlMessage,
-        // })
+        res.status(404).json({
+            message: e.message || e.sqlMessage,
+        })
     }
 }
 
@@ -166,10 +166,10 @@ exports.updateUser = async (req , res ) => {
             message: e.massage || e.sqlMessage,
             error: true
         } );
-        // res.status(400).json({
-        //     message: e.massage || e.sqlMessage,
-        //     error: true
-        // })
+        res.status(400).json({
+            message: e.massage || e.sqlMessage,
+            error: true
+        })
     }
 }
 exports.deleteUser = async (req , res ) => {
@@ -189,9 +189,9 @@ exports.deleteUser = async (req , res ) => {
             message: e.massage || e.sqlMessage,
             error: true
         });
-        // res.status(400).json({
-        //     message: e.massage || e.sqlMessage,
-        //     error: true
-        // })
+        res.status(400).json({
+            message: e.massage || e.sqlMessage,
+            error: true
+        })
     }
 }

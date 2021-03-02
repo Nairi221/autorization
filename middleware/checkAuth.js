@@ -18,10 +18,10 @@ const check = async (req , res , next) => {
             next()
         }
     } catch (e) {
-        logger.log('error', 'middleware - checkAuth - check',e , {message: e.message})
-        // res.status(400).json({
-        //     message: e.message
-        // })
+        logger.log('error', 'middleware - checkAuth - check', {message: e.message})
+        res.status(400).json({
+             message: e.message
+         })
     }
 
 }
